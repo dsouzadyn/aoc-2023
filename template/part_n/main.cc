@@ -1,21 +1,20 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-using namespace std;
 
 
 int main() {
-	string line;
-	ifstream file ("input.txt");
+  std::string line;
+  std::ifstream file ("input.txt");
 	if (file.is_open()) 
 	{
 		while (getline(file, line))
 		{
-			cout << line << "\n";
+      std::cout << line << "\n";
 		}
 		file.close();
 	}
-	else cout << "Unable to open file";
+	else std::cout << "Unable to open file";
 
 	return 0;
 }
