@@ -1,4 +1,3 @@
-#include <cctype>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -20,15 +19,16 @@ int main() {
   if (file.is_open()) {
     int grand_total = 0;
     while (getline(file, line)) {
-      auto line_split = split(line, "[:]");
-      auto card_split = split(line, "[|]");
+      auto line_split = split(line, "([:]\\s+)");
+      auto card_split = split(line_split[1], "(\\s[|]\\s+)");
 
       std::set<std::string> winning_set;
-      for (auto winning_card : split(card_split[0], "[ ]+")) {
+
+      for (auto winning_card : split(card_split[0], "(\\s+)")) {
         winning_set.insert(winning_card);
       }
       int total = 0;
-      for (auto card : split(card_split[1], "[ ]+")) {
+      for (auto card : split(card_split[1], "(\\s+)")) {
         if (winning_set.count(card) > 0) {
           if (total == 0)
             total = 1;
