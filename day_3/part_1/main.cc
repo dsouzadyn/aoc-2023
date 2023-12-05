@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-std::vector<int> find_adjacent_numbers(std::vector<std::string> grid, int i, int j)
+std::vector<int> find_adjacent_numbers(std::vector<std::string> &grid, int i, int j)
 {
 	std::vector<int> numbers;
 	// Easy cases
@@ -101,7 +101,7 @@ std::vector<int> find_adjacent_numbers(std::vector<std::string> grid, int i, int
 	return numbers;
 }
 
-void solve(std::vector<std::string> grid)
+void solve(std::vector<std::string> &grid)
 {
 	int total = 0;
 	for (int i = 1; i < grid.size() - 1; i++)

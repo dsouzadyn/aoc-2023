@@ -1,3 +1,4 @@
 *.o
 solver
 input*
+perf*

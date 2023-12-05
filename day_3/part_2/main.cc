@@ -3,41 +3,43 @@
 #include <string>
 #include <vector>
 
-std::vector<int> find_adjacent_numbers(std::vector<std::string> grid, int i, int j)
+std::vector<int> find_adjacent_numbers(std::vector<std::string> &grid, int &i, int &j)
 {
 	std::vector<int> numbers;
+	int r, l;
+	int number;
 	// Easy cases
 	// 1. Left of symbol
 	if (grid[i][j - 1] != '.')
 	{
-		int r = j - 1;
-		int l = r;
+		r = j - 1;
+		l = r;
 		for (int q = j - 1; q >= 0 && grid[i][q] != '.'; q--)
 			l = q;
-		int number = stoi(grid[i].substr(l, r - l + 1));
+		number = stoi(grid[i].substr(l, r - l + 1));
 		numbers.push_back(number);
 	}
 	// 2. Right of symbol
 	if (grid[i][j + 1] != '.')
 	{
-		int r = j + 1;
-		int l = r;
+		r = j + 1;
+		l = r;
 		for (int q = j + 1; q < grid[i].size() && grid[i][q] != '.'; q++)
 			r = q;
-		int number = stoi(grid[i].substr(l, r - l + 1));
+		number = stoi(grid[i].substr(l, r - l + 1));
 		numbers.push_back(number);
 	}
 	// The tedious cases
 	// 1. Top of symbol
 	if (grid[i - 1][j] != '.')
 	{
-		int l = j;
-		int r = l;
+		l = j;
+		r = l;
 		for (int q = j - 1; q >= 0 && grid[i - 1][q] != '.'; q--)
 			l = q;
 		for (int q = j + 1; q < grid[i - 1].size() && grid[i - 1][q] != '.'; q++)
 			r = q;
-		int number = stoi(grid[i - 1].substr(l, r - l + 1));
+		number = stoi(grid[i - 1].substr(l, r - l + 1));
 		numbers.push_back(number);
 	}
 	else
@@ -45,34 +47,34 @@ std::vector<int> find_adjacent_numbers(std::vector<std::string> grid, int i, int
 		// 1a. Top left of symbol
 		if (grid[i - 1][j - 1] != '.')
 		{
-			int l = j - 1;
-			int r = l;
+			l = j - 1;
+			r = l;
 			for (int q = j - 1; q >= 0 && grid[i - 1][q] != '.'; q--)
 				l = q;
-			int number = stoi(grid[i - 1].substr(l, r - l + 1));
+			number = stoi(grid[i - 1].substr(l, r - l + 1));
 			numbers.push_back(number);
 		}
 		// 1b. Top right of symbol
 		if (grid[i - 1][j + 1] != '.')
 		{
-			int r = j + 1;
-			int l = r;
+			r = j + 1;
+			l = r;
 			for (int q = j + 1; q < grid[i - 1].size() && grid[i - 1][q] != '.'; q++)
 				r = q;
-			int number = stoi(grid[i - 1].substr(l, r - l + 1));
+			number = stoi(grid[i - 1].substr(l, r - l + 1));
 			numbers.push_back(number);
 		}
 	}
 	// 2. Bottom of symbol
 	if (grid[i + 1][j] != '.')
 	{
-		int l = j;
-		int r = l;
+		l = j;
+		r = l;
 		for (int q = j - 1; q >= 0 && grid[i + 1][q] != '.'; q--)
 			l = q;
 		for (int q = j + 1; q < grid[i + 1].size() && grid[i + 1][q] != '.'; q++)
 			r = q;
-		int number = stoi(grid[i + 1].substr(l, r - l + 1));
+		number = stoi(grid[i + 1].substr(l, r - l + 1));
 		numbers.push_back(number);
 	}
 	else
@@ -80,21 +82,21 @@ std::vector<int> find_adjacent_numbers(std::vector<std::string> grid, int i, int
 		// 2a. Bottom left of symbol
 		if (grid[i + 1][j - 1] != '.')
 		{
-			int l = j - 1;
-			int r = l;
+			l = j - 1;
+			r = l;
 			for (int q = j - 1; q >= 0 && grid[i + 1][q] != '.'; q--)
 				l = q;
-			int number = stoi(grid[i + 1].substr(l, r - l + 1));
+			number = stoi(grid[i + 1].substr(l, r - l + 1));
 			numbers.push_back(number);
 		}
 		// 2b. Bottom right of symbol
 		if (grid[i + 1][j + 1] != '.')
 		{
-			int r = j + 1;
-			int l = r;
+			r = j + 1;
+			l = r;
 			for (int q = j + 1; q < grid[i + 1].size() && grid[i + 1][q] != '.'; q++)
 				r = q;
-			int number = stoi(grid[i + 1].substr(l, r - l + 1));
+			number = stoi(grid[i + 1].substr(l, r - l + 1));
 			numbers.push_back(number);
 		}
 	}
@@ -111,14 +113,15 @@ int find_gear_ratio(std::vector<int> numbers)
 	}
 }
 
-void solve(std::vector<std::string> grid)
+void solve(std::vector<std::string> &grid)
 {
 	int total = 0;
+	char el;
 	for (int i = 1; i < grid.size() - 1; i++)
 	{
 		for (int j = 1; j < grid[i].size() - 1; j++)
 		{
-			char el = grid[i][j];
+			el = grid[i][j];
 			if (!isdigit(el) && el == '*')
 			{
 				total += find_gear_ratio(find_adjacent_numbers(grid, i, j));
