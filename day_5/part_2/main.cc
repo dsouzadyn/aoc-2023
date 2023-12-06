@@ -6,21 +6,22 @@
 #include <string_view>
 #include <regex>
 #include <limits>
+#include <utility>
 
 class Seed
 {
 private:
-	long long _seed;
-	long long _soil;
-	long long _fertilizer;
-	long long _water;
-	long long _light;
-	long long _temperature;
-	long long _humidity;
-	long long _location;
+	std::pair<long long, long long> _seed;
+	std::pair<long long, long long> _soil;
+	std::pair<long long, long long> _fertilizer;
+	std::pair<long long, long long> _water;
+	std::pair<long long, long long> _light;
+	std::pair<long long, long long> _temperature;
+	std::pair<long long, long long> _humidity;
+	std::pair<long long, long long> _location;
 
 public:
-	Seed(long long seed) { _seed = seed; }
+	Seed(std::pair<long long, long long> seed) { _seed = seed; }
 	void FindSoil(std::vector<std::vector<long long>> soilmap)
 	{
 		bool found_destination = false;
@@ -29,9 +30,14 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_seed >= dest && (_seed - dest) <= range)
+			int dest_min = std::max(dest, _seed.first);
+			int dest_max = std::min(dest + range, _seed.second);
+			if (dest_max >= dest_min)
 			{
-				_soil = source + (_seed - dest);
+				std::cerr << "dest_max: " << dest_max << " dest_min: " << dest_min << "\n";
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min);
+				_soil = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -40,6 +46,7 @@ public:
 		{
 			_soil = _seed;
 		}
+		std::cerr << "soil: " << _soil.first << " " << _soil.second << "\n";
 	}
 	void FindFertilizer(std::vector<std::vector<long long>> fertilizermap)
 	{
@@ -49,9 +56,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_soil >= dest && (_soil - dest) <= range)
+			int dest_min = std::max(dest, _soil.first);
+			int dest_max = std::min(dest + range, _soil.second);
+			if (dest_max >= dest_min)
 			{
-				_fertilizer = source + (_soil - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_fertilizer = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -69,9 +80,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_fertilizer >= dest && (_fertilizer - dest) <= range)
+			int dest_min = std::max(dest, _fertilizer.first);
+			int dest_max = std::min(dest + range, _fertilizer.second);
+			if (dest_max >= dest_min)
 			{
-				_water = source + (_fertilizer - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_water = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -89,9 +104,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_water >= dest && (_water - dest) <= range)
+			int dest_min = std::max(dest, _water.first);
+			int dest_max = std::min(dest + range, _water.second);
+			if (dest_max >= dest_min)
 			{
-				_light = source + (_water - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_light = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -109,9 +128,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_light >= dest && (_light - dest) <= range)
+			int dest_min = std::max(dest, _light.first);
+			int dest_max = std::min(dest + range, _light.second);
+			if (dest_max >= dest_min)
 			{
-				_temperature = source + (_light - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_temperature = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -129,9 +152,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_temperature >= dest && (_temperature - dest) <= range)
+			int dest_min = std::max(dest, _temperature.first);
+			int dest_max = std::min(dest + range, _temperature.second);
+			if (dest_max >= dest_min)
 			{
-				_humidity = source + (_temperature - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_humidity = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -149,9 +176,13 @@ public:
 			long long source = row[0];
 			long long dest = row[1];
 			long long range = row[2];
-			if (_humidity >= dest && (_humidity - dest) <= range)
+			int dest_min = std::max(dest, _humidity.first);
+			int dest_max = std::min(dest + range, _humidity.second);
+			if (dest_max >= dest_min)
 			{
-				_location = source + (_humidity - dest);
+				long long l = source + (dest_min - dest);
+				long long r = l + (dest_max - dest_min + 1);
+				_location = std::make_pair(l, r);
 				found_destination = true;
 				break;
 			}
@@ -161,7 +192,7 @@ public:
 			_location = _humidity;
 		}
 	}
-	long long Location() { return _location; }
+	long long Location() { return _location.first; }
 };
 
 std::vector<std::string> split(const std::string s, const std::string delim)
@@ -188,8 +219,13 @@ int main()
 			if (l.starts_with("seeds:"))
 			{
 				auto seed_split = split(line, "(\\s+)");
-				for (long long i = 1; i < seed_split.size(); i++)
-					seeds.push_back(Seed(stoll(seed_split[i])));
+				for (long long i = 1; i < seed_split.size() - 1; i += 2)
+				{
+					long long l = stoll(seed_split[i]);
+					long long r = l + stoll(seed_split[i + 1]);
+					std::cerr << l << " " << r << "\n";
+					seeds.push_back(Seed(std::make_pair(l, r)));
+				}
 			}
 			else if (!isdigit(line[0]))
 			{
